@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cj1tejxa6h0qo"
+path="res://.godot/imported/pipeline.glsl-7ce23a2827fb8d8b4d0c69f939611dc3.res"
+
+[deps]
+
+source_file="res://addons/ntscrt/shaders/ntscrs_gpu/pipeline.glsl"
+dest_files=["res://.godot/imported/pipeline.glsl-7ce23a2827fb8d8b4d0c69f939611dc3.res"]
+
+[params]
+

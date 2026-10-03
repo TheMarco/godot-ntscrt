@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://h4jeartrlf5w"
+path="res://.godot/imported/gate.glsl-aa8ea50b89beb8c97425b56836a96fba.res"
+
+[deps]
+
+source_file="res://addons/ntscrt/shaders/ntscrt_receiver_gpu/gate.glsl"
+dest_files=["res://.godot/imported/gate.glsl-aa8ea50b89beb8c97425b56836a96fba.res"]
+
+[params]
+

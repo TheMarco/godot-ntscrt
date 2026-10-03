@@ -1,0 +1,939 @@
+{
+  "$schemaNote": "Machine-readable inventory of canonical STANDARD settings (NtscEffectFullSettings, numeric IDs 0..61) from pinned ntsc-rs add90f5bf1bf7e3c573e4e945a16f44a82941b51. Extracted by source inspection (no network/cached deps, so the descriptors API could not be executed). Easy-mode settings (IDs 4096+, settings/easy.rs) are a separate ID space and out of scope.",
+  "defaultSemantics": "Defaults are NtscEffect::default() (settings/standard.rs:399-442) with sub-struct Defaults; FullSettings::default() = From(NtscEffect::default()). Group defaults: Options Some(..) => enabled:true. Group/boolean serialize as JSON bool; enums as u32 index; percentage/float as f32; int as i32. JSON preset loader clamps numeric values to descriptor ranges (settings.rs:677-692) and starts from legacy_value() (standard.rs:1191-1249).",
+  "legacyValue": "filter_type=ConstantK(0); luma_smear=0.0; head_switching.mid_line disabled; composite_noise {freq 0.25, detail 1}; luma_noise disabled; chroma_noise {freq 0.05, detail 1}; vhs edge_wave {freq 0.05, detail 1}, sharpen {freq 1.0}; all else = default.",
+  "runtimeTraps": {
+    "chroma_loss_1": "intensity 1.0 blanks ALL rows, no panic (Geometric ln(0)=-inf -> gap 0); 0.0 gated off (ntsc.rs:1101,1409)",
+    "comb_fallback": "1/2-line comb falls back to Notch at height 1 (ntsc.rs:488-495)",
+    "detail_negative": "detail<0 -> try_into u32 fails -> 0 -> clamp(1,5) -> 1 (ntsc.rs:623,647,1065)",
+    "headswitch_noop": "offset>num_rows (after vscale) -> whole stage returns (ntsc.rs:728); rows=0 -> empty-slice no-op, no div-by-zero",
+    "luma_smear_rate": "rate arg is hscale, NOT NTSC_RATE (ntsc.rs:578)",
+    "neg_height_offset": "height/offset<0 -> try_into().unwrap_or_default() -> 0 (ntsc.rs:1241-1242,1259)",
+    "phase_offset_wrap": "offset wraps mod 4 incl negatives via two's-complement &3 (ntsc.rs:282-288)",
+    "ringing_clamp": "freq/hscale clamped 0..1 before notch (would panic otherwise) (ntsc.rs:1281)",
+    "snow_NaN_edge": "anisotropy=1.0 and U==intensity -> 0/0=NaN, measure-zero; GPU must replicate IEEE or guard (ntsc.rs:818-823)",
+    "vhs_independence": "chroma_loss/edge_wave need only vhs group enabled; sharpen additionally needs tape!=NONE (ntsc.rs:1342,1409,1413)"
+  },
+  "presetFormat": {
+    "application": "ntsc-rs GUI version-1 flat map: {name: value, ..., version: 1}",
+    "groupEncoding": "group enable flag stored under the group's own name as bool",
+    "ntscqtImport": "from_ntscqt_json (standard.rs:1273-1447) maps legacy _-prefixed keys; not part of canonical IDs"
+  },
+  "sourceRoot": "build/ntscrt-upstream/ntsc-rs-add90f5bf1bf7e3c573e4e945a16f44a82941b51/crates/ntscrs/src",
+  "sourceRefs": {
+    "descriptors": "settings/standard.rs:444-1189 (Settings for NtscEffectFullSettings)",
+    "ids": "settings/standard.rs:291-358 (setting_id mod)",
+    "defaults": "settings/standard.rs:125-132,142-151,163-172,199-206,217-226,237-247,256-264,266-271(Fbm derive Default=0/0/0),280-288,399-442",
+    "enums": "settings/standard.rs:15-88,174-191",
+    "jsonCodec": "settings/settings.rs:492-539 serialize; 664-730 parse"
+  },
+  "typeNotes": {
+    "boolean": "checkbox",
+    "enum": "u32 index into options[]; invalid values rejected on typed get (TryFromPrimitive)",
+    "float": "f32 inclusive range; logarithmic hints UI slider scale only",
+    "group": "enable bool + children; disabled group => None at runtime (macro From impls)",
+    "int": "i32 inclusive range",
+    "percentage": "f32 0.0..=1.0 (100%); logarithmic hints UI slider scale only"
+  },
+  "upstreamPin": "ntsc-rs-add90f5bf1bf7e3c573e4e945a16f44a82941b51",
+  "verifiedBy": "Executed pinned Rust descriptors and current defaults; 62 IDs verified. use_field option order corrected to upstream order.",
+  "version": 1,
+  "settings": [
+    {
+      "default": 0,
+      "id": 36,
+      "label": "Random seed",
+      "name": "random_seed",
+      "path": "random_seed",
+      "type": "int",
+      "min": -2147483648,
+      "max": 2147483647,
+      "enables": null
+    },
+    {
+      "default": 4,
+      "id": 30,
+      "label": "Use field",
+      "name": "use_field",
+      "path": "use_field",
+      "type": "enum",
+      "description": "Choose which rows (\"fields\" in NTSC parlance) of the source image will be used.",
+      "options": [
+        {
+          "description": "Skip every other row, alternating between skipping even and odd rows.",
+          "index": 0,
+          "label": "Alternating"
+        },
+        {
+          "description": "Skip every lower row, keeping the upper ones.",
+          "index": 1,
+          "label": "Upper only"
+        },
+        {
+          "description": "Skip every upper row, keeping the lower ones.",
+          "index": 2,
+          "label": "Lower only"
+        },
+        {
+          "description": "Treat the video as interlaced, with the upper field as the earlier frame.",
+          "index": 4,
+          "label": "Interleaved (upper first)"
+        },
+        {
+          "description": "Treat the video as interlaced, with the lower field as the earlier frame.",
+          "index": 5,
+          "label": "Interleaved (lower first)"
+        },
+        {
+          "description": "Use all rows; don't skip any.",
+          "index": 3,
+          "label": "Both"
+        }
+      ],
+      "variantMap": {
+        "Alternating": 0,
+        "Upper": 1,
+        "Lower": 2,
+        "Both": 3,
+        "InterleavedUpper": 4,
+        "InterleavedLower": 5
+      }
+    },
+    {
+      "default": 1,
+      "id": 46,
+      "label": "Lowpass filter type",
+      "name": "filter_type",
+      "path": "filter_type",
+      "type": "enum",
+      "description": "The low-pass filter to use throughout the effect.",
+      "options": [
+        {
+          "index": 0,
+          "label": "Constant K (blurry)",
+          "description": "Simple constant-k filter. Produces longer, blurry results."
+        },
+        {
+          "index": 1,
+          "label": "Butterworth (sharper)",
+          "description": "Filter with a sharper falloff. Produces sharpened, less blurry results."
+        }
+      ],
+      "variantMap": {
+        "ConstantK": 0,
+        "Butterworth": 1
+      }
+    },
+    {
+      "default": 2,
+      "id": 38,
+      "label": "Input luma filter",
+      "name": "input_luma_filter",
+      "path": "input_luma_filter",
+      "type": "enum",
+      "description": "Filter the input luminance to decrease rainbow artifacts.",
+      "options": [
+        {
+          "index": 2,
+          "label": "Notch",
+          "description": "Apply a notch filter to the input luminance signal. Sharp, but has ringing artifacts."
+        },
+        {
+          "index": 1,
+          "label": "Box",
+          "description": "Apply a simple box filter to the input luminance signal."
+        },
+        {
+          "index": 0,
+          "label": "None",
+          "description": "Do not filter the luminance signal. Adds rainbow artifacts."
+        }
+      ],
+      "variantMap": {
+        "None": 0,
+        "Box": 1,
+        "Notch": 2
+      }
+    },
+    {
+      "default": 2,
+      "id": 0,
+      "label": "Chroma low-pass in",
+      "name": "chroma_lowpass_in",
+      "path": "chroma_lowpass_in",
+      "type": "enum",
+      "description": "Apply a low-pass filter to the input chrominance (color) signal.",
+      "options": [
+        {
+          "index": 2,
+          "label": "Full",
+          "description": "Full-intensity low-pass filter."
+        },
+        {
+          "index": 1,
+          "label": "Light",
+          "description": "Less intense low-pass filter."
+        },
+        {
+          "index": 0,
+          "label": "None",
+          "description": "No low-pass filter."
+        }
+      ],
+      "variantMap": {
+        "None": 0,
+        "Light": 1,
+        "Full": 2
+      }
+    },
+    {
+      "default": 1.0,
+      "id": 1,
+      "label": "Composite signal sharpening",
+      "name": "composite_preemphasis",
+      "path": "composite_sharpening",
+      "type": "float",
+      "min": -1.0,
+      "max": 2.0,
+      "logarithmic": false,
+      "description": "Boost high frequencies in the NTSC signal, sharpening the image and intensifying colors.",
+      "note": "JSON name is composite_preemphasis (legacy ntscQT key); struct field is composite_sharpening."
+    },
+    {
+      "default": true,
+      "id": 52,
+      "label": "Composite signal noise",
+      "name": "composite_noise",
+      "path": "composite_noise.enabled",
+      "type": "group",
+      "description": "Noise applied to the composite NTSC signal.",
+      "children": [
+        {
+          "default": 0.05,
+          "id": 4,
+          "label": "Intensity",
+          "name": "composite_noise_intensity",
+          "path": "composite_noise.settings.intensity",
+          "type": "percentage",
+          "logarithmic": true,
+          "description": "Intensity of the noise."
+        },
+        {
+          "default": 0.5,
+          "id": 53,
+          "label": "Frequency",
+          "name": "composite_noise_frequency",
+          "path": "composite_noise.settings.frequency",
+          "type": "float",
+          "min": 0.0,
+          "max": 1.0,
+          "logarithmic": false,
+          "description": "Base wavelength, in pixels, of the noise."
+        },
+        {
+          "default": 1,
+          "id": 54,
+          "label": "Detail",
+          "name": "composite_noise_detail",
+          "path": "composite_noise.settings.detail",
+          "type": "int",
+          "min": 1,
+          "max": 5,
+          "description": "Octaves of noise."
+        }
+      ]
+    },
+    {
+      "default": 0.00025,
+      "id": 6,
+      "label": "Snow",
+      "name": "snow_intensity",
+      "path": "snow_intensity",
+      "type": "float",
+      "min": 0.0,
+      "max": 100.0,
+      "logarithmic": true,
+      "description": "Frequency of random speckles in the image.",
+      "note": "Runtime multiplies by 0.01 before use (ntsc.rs:1228)."
+    },
+    {
+      "default": 0.5,
+      "id": 34,
+      "label": "Snow anisotropy",
+      "name": "snow_anisotropy",
+      "path": "snow_anisotropy",
+      "type": "percentage",
+      "logarithmic": false,
+      "description": "Determines whether the speckles are placed truly randomly or concentrated in certain rows."
+    },
+    {
+      "default": 2,
+      "id": 2,
+      "label": "Scanline phase shift",
+      "name": "video_scanline_phase_shift",
+      "path": "video_scanline_phase_shift",
+      "type": "enum",
+      "description": "Phase shift of the chrominance (color) signal each scanline. Usually 180 degrees.",
+      "options": [
+        {
+          "index": 0,
+          "label": "0 degrees"
+        },
+        {
+          "index": 1,
+          "label": "90 degrees"
+        },
+        {
+          "index": 2,
+          "label": "180 degrees"
+        },
+        {
+          "index": 3,
+          "label": "270 degrees"
+        }
+      ],
+      "variantMap": {
+        "Degrees0": 0,
+        "Degrees90": 1,
+        "Degrees180": 2,
+        "Degrees270": 3
+      }
+    },
+    {
+      "default": 0,
+      "id": 3,
+      "label": "Scanline phase shift offset",
+      "name": "video_scanline_phase_shift_offset",
+      "path": "video_scanline_phase_shift_offset",
+      "type": "int",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "default": 1,
+      "id": 33,
+      "label": "Chroma demodulation filter",
+      "name": "chroma_demodulation",
+      "path": "chroma_demodulation",
+      "type": "enum",
+      "description": "Filter used to modulate the chrominance (color) data out of the composite NTSC signal.",
+      "options": [
+        {
+          "index": 0,
+          "label": "Box",
+          "description": "Simple horizontal box blur."
+        },
+        {
+          "index": 1,
+          "label": "Notch",
+          "description": "Notch filter. Sharper than a box blur, but with ringing artifacts."
+        },
+        {
+          "index": 2,
+          "label": "1-line comb",
+          "description": "Average the current row with the previous one, phase-cancelling the chrominance (color) signals. Only works if the scanline phase shift is 180 degrees."
+        },
+        {
+          "index": 3,
+          "label": "2-line comb",
+          "description": "Average the current row with the previous and next ones, phase-cancelling the chrominance (color) signals. Only works if the scanline phase shift is 180 degrees."
+        }
+      ],
+      "variantMap": {
+        "Box": 0,
+        "Notch": 1,
+        "OneLineComb": 2,
+        "TwoLineComb": 3
+      },
+      "dependsOn": "Comb options require video_scanline_phase_shift == 180 degrees."
+    },
+    {
+      "default": 0.5,
+      "id": 45,
+      "label": "Luma smear",
+      "name": "luma_smear",
+      "path": "luma_smear",
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0,
+      "logarithmic": false
+    },
+    {
+      "default": true,
+      "id": 11,
+      "label": "Head switching",
+      "name": "head_switching",
+      "path": "head_switching.enabled",
+      "type": "group",
+      "description": "Emulate VHS head-switching artifacts at the bottom of the image.",
+      "children": [
+        {
+          "default": 8,
+          "id": 12,
+          "label": "Height",
+          "name": "head_switching_height",
+          "path": "head_switching.settings.height",
+          "type": "int",
+          "min": 0,
+          "max": 24,
+          "description": "Total height of the head-switching artifact."
+        },
+        {
+          "default": 3,
+          "id": 13,
+          "label": "Offset",
+          "name": "head_switching_offset",
+          "path": "head_switching.settings.offset",
+          "type": "int",
+          "min": 0,
+          "max": 24,
+          "description": "How much of the head-switching artifact is off-screen."
+        },
+        {
+          "default": 72.0,
+          "id": 14,
+          "label": "Horizontal shift",
+          "name": "head_switching_horizontal_shift",
+          "path": "head_switching.settings.horiz_shift",
+          "type": "float",
+          "min": -100.0,
+          "max": 100.0,
+          "logarithmic": false,
+          "description": "How much the head-switching artifact shifts rows horizontally."
+        },
+        {
+          "default": true,
+          "id": 49,
+          "label": "Start mid-line",
+          "name": "head_switching_start_mid_line",
+          "path": "head_switching.settings.mid_line.enabled",
+          "type": "group",
+          "description": "Start the head-switching artifact mid-scanline, with some static where it begins.",
+          "children": [
+            {
+              "default": 0.95,
+              "id": 50,
+              "label": "Position",
+              "name": "head_switching_mid_line_position",
+              "path": "head_switching.settings.mid_line.settings.position",
+              "type": "percentage",
+              "logarithmic": false,
+              "description": "Horizontal position at which the head-switching starts."
+            },
+            {
+              "default": 0.03,
+              "id": 51,
+              "label": "Jitter",
+              "name": "head_switching_mid_line_jitter",
+              "path": "head_switching.settings.mid_line.settings.jitter",
+              "type": "percentage",
+              "logarithmic": true,
+              "description": "How much the head-switching artifact \"jitters\" horizontally."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "default": true,
+      "id": 15,
+      "label": "Tracking noise",
+      "name": "tracking_noise",
+      "path": "tracking_noise.enabled",
+      "type": "group",
+      "description": "Emulate noise from VHS tracking error.",
+      "children": [
+        {
+          "default": 12,
+          "id": 16,
+          "label": "Height",
+          "name": "tracking_noise_height",
+          "path": "tracking_noise.settings.height",
+          "type": "int",
+          "min": 0,
+          "max": 120,
+          "description": "Total height of the tracking artifacts."
+        },
+        {
+          "default": 15.0,
+          "id": 17,
+          "label": "Wave intensity",
+          "name": "tracking_noise_wave_intensity",
+          "path": "tracking_noise.settings.wave_intensity",
+          "type": "float",
+          "min": -50.0,
+          "max": 50.0,
+          "logarithmic": false,
+          "description": "How much the affected scanlines \"wave\" back and forth."
+        },
+        {
+          "default": 0.025,
+          "id": 18,
+          "label": "Snow intensity",
+          "name": "tracking_noise_snow_intensity",
+          "path": "tracking_noise.settings.snow_intensity",
+          "type": "float",
+          "min": 0.0,
+          "max": 1.0,
+          "logarithmic": true,
+          "description": "Frequency of speckle-type noise in the artifacts."
+        },
+        {
+          "default": 0.25,
+          "id": 35,
+          "label": "Snow anisotropy",
+          "name": "tracking_noise_snow_anisotropy",
+          "path": "tracking_noise.settings.snow_anisotropy",
+          "type": "percentage",
+          "logarithmic": false,
+          "description": "How much the speckles are clustered by scanline."
+        },
+        {
+          "default": 0.25,
+          "id": 31,
+          "label": "Noise intensity",
+          "name": "tracking_noise_noise_intensity",
+          "path": "tracking_noise.settings.noise_intensity",
+          "type": "percentage",
+          "logarithmic": true,
+          "description": "Intensity of non-speckle noise."
+        }
+      ]
+    },
+    {
+      "default": true,
+      "id": 19,
+      "label": "Ringing",
+      "name": "ringing",
+      "path": "ringing.enabled",
+      "type": "group",
+      "description": "Additional ringing artifacts, simulated with a notch filter.",
+      "children": [
+        {
+          "default": 0.45,
+          "id": 20,
+          "label": "Frequency",
+          "name": "ringing_frequency",
+          "path": "ringing.settings.frequency",
+          "type": "percentage",
+          "logarithmic": false,
+          "description": "Frequency/period of the ringing, in \"rings per pixel\"."
+        },
+        {
+          "default": 4.0,
+          "id": 21,
+          "label": "Power",
+          "name": "ringing_power",
+          "path": "ringing.settings.power",
+          "type": "float",
+          "min": 1.0,
+          "max": 10.0,
+          "logarithmic": false,
+          "description": "The power of the notch filter / how far out the ringing extends."
+        },
+        {
+          "default": 4.0,
+          "id": 22,
+          "label": "Scale",
+          "name": "ringing_scale",
+          "path": "ringing.settings.intensity",
+          "type": "float",
+          "min": 0.0,
+          "max": 10.0,
+          "logarithmic": false,
+          "description": "Intensity of the ringing.",
+          "note": "JSON name is ringing_scale; struct field is intensity."
+        }
+      ]
+    },
+    {
+      "default": true,
+      "id": 55,
+      "label": "Luma noise",
+      "name": "luma_noise",
+      "path": "luma_noise.enabled",
+      "type": "group",
+      "description": "Noise applied to the luminance signal. Useful for higher-frequency noise than the \"Composite noise\" setting can provide.",
+      "children": [
+        {
+          "default": 0.01,
+          "id": 57,
+          "label": "Intensity",
+          "name": "luma_noise_intensity",
+          "path": "luma_noise.settings.intensity",
+          "type": "percentage",
+          "logarithmic": true,
+          "description": "Intensity of the noise."
+        },
+        {
+          "default": 0.5,
+          "id": 56,
+          "label": "Frequency",
+          "name": "luma_noise_frequency",
+          "path": "luma_noise.settings.frequency",
+          "type": "float",
+          "min": 0.0,
+          "max": 1.0,
+          "logarithmic": false,
+          "description": "Base wavelength, in pixels, of the noise."
+        },
+        {
+          "default": 1,
+          "id": 58,
+          "label": "Detail",
+          "name": "luma_noise_detail",
+          "path": "luma_noise.settings.detail",
+          "type": "int",
+          "min": 1,
+          "max": 5,
+          "description": "Octaves of noise."
+        }
+      ]
+    },
+    {
+      "default": true,
+      "id": 42,
+      "label": "Chroma noise",
+      "name": "chroma_noise",
+      "path": "chroma_noise.enabled",
+      "type": "group",
+      "description": "Noise applied to the chrominance (color) signal.",
+      "children": [
+        {
+          "default": 0.1,
+          "id": 5,
+          "label": "Intensity",
+          "name": "chroma_noise_intensity",
+          "path": "chroma_noise.settings.intensity",
+          "type": "percentage",
+          "logarithmic": true,
+          "description": "Intensity of the noise."
+        },
+        {
+          "default": 0.05,
+          "id": 43,
+          "label": "Frequency",
+          "name": "chroma_noise_frequency",
+          "path": "chroma_noise.settings.frequency",
+          "type": "float",
+          "min": 0.0,
+          "max": 0.5,
+          "logarithmic": false,
+          "description": "Base wavelength, in pixels, of the noise."
+        },
+        {
+          "default": 2,
+          "id": 44,
+          "label": "Detail",
+          "name": "chroma_noise_detail",
+          "path": "chroma_noise.settings.detail",
+          "type": "int",
+          "min": 1,
+          "max": 5,
+          "description": "Octaves of noise."
+        }
+      ]
+    },
+    {
+      "default": 0.0,
+      "id": 37,
+      "label": "Chroma phase error",
+      "name": "chroma_phase_error",
+      "path": "chroma_phase_error",
+      "type": "percentage",
+      "logarithmic": false,
+      "description": "Phase error for the chrominance (color) signal.",
+      "note": "Runtime applies only when > 0.0 (ntsc.rs:1322)."
+    },
+    {
+      "default": 0.001,
+      "id": 7,
+      "label": "Chroma phase noise",
+      "name": "chroma_phase_noise_intensity",
+      "path": "chroma_phase_noise_intensity",
+      "type": "percentage",
+      "logarithmic": true,
+      "description": "Noise applied per-scanline to the phase of the chrominance (color) signal.",
+      "note": "Runtime applies only when > 0.0 (ntsc.rs:1326)."
+    },
+    {
+      "default": 0.0,
+      "id": 8,
+      "label": "Chroma delay (horizontal)",
+      "name": "chroma_delay_horizontal",
+      "path": "chroma_delay_horizontal",
+      "type": "float",
+      "min": -40.0,
+      "max": 40.0,
+      "logarithmic": false,
+      "description": "Horizontal offset of the chrominance (color) signal."
+    },
+    {
+      "default": 0,
+      "id": 9,
+      "label": "Chroma delay (vertical)",
+      "name": "chroma_delay_vertical",
+      "path": "chroma_delay_vertical",
+      "type": "int",
+      "min": -20,
+      "max": 20,
+      "description": "Vertical offset of the chrominance (color) signal. Usually increases with VHS generation loss."
+    },
+    {
+      "default": true,
+      "id": 23,
+      "label": "VHS emulation",
+      "name": "vhs_settings",
+      "path": "vhs_settings.enabled",
+      "type": "group",
+      "children": [
+        {
+          "default": 2,
+          "id": 24,
+          "label": "Tape speed",
+          "name": "vhs_tape_speed",
+          "path": "vhs_settings.settings.tape_speed",
+          "type": "enum",
+          "description": "Emulate cutoff of high-frequency data at various VHS recording speeds.",
+          "options": [
+            {
+              "index": 1,
+              "label": "SP (Standard Play)"
+            },
+            {
+              "index": 2,
+              "label": "LP (Long Play)"
+            },
+            {
+              "index": 3,
+              "label": "EP (Extended Play)"
+            },
+            {
+              "index": 0,
+              "label": "None"
+            }
+          ],
+          "variantMap": {
+            "NONE": 0,
+            "SP": 1,
+            "LP": 2,
+            "EP": 3
+          },
+          "tapeParams": {
+            "NONE": null,
+            "SP": {
+              "luma_cut": 2400000.0,
+              "chroma_cut": 320000.0,
+              "chroma_delay": 4
+            },
+            "LP": {
+              "luma_cut": 1900000.0,
+              "chroma_cut": 300000.0,
+              "chroma_delay": 5
+            },
+            "EP": {
+              "luma_cut": 1400000.0,
+              "chroma_cut": 280000.0,
+              "chroma_delay": 6
+            }
+          },
+          "note": "NONE disables tape lowpass+sharpen stages but chroma_loss/edge_wave still apply if set."
+        },
+        {
+          "default": 2.5e-05,
+          "id": 26,
+          "label": "Chroma loss",
+          "name": "vhs_chroma_loss",
+          "path": "vhs_settings.settings.chroma_loss",
+          "type": "percentage",
+          "logarithmic": true,
+          "description": "Chance that the chrominance (color) signal is completely lost in each scanline.",
+          "note": "Runtime applies only when > 0.0 (ntsc.rs:1409)."
+        },
+        {
+          "default": true,
+          "id": 47,
+          "label": "Sharpen",
+          "name": "vhs_sharpen_enabled",
+          "path": "vhs_settings.settings.sharpen.enabled",
+          "type": "group",
+          "description": "Sharpening of the image, as done by some VHS decks.",
+          "dependsOn": "Requires vhs_tape_speed != None (ntsc.rs:1413-1416).",
+          "children": [
+            {
+              "default": 0.25,
+              "id": 27,
+              "label": "Intensity",
+              "name": "vhs_sharpen",
+              "path": "vhs_settings.settings.sharpen.settings.intensity",
+              "type": "float",
+              "min": 0.0,
+              "max": 5.0,
+              "logarithmic": false,
+              "description": "Amount of sharpening to apply.",
+              "note": "JSON name is vhs_sharpen; struct field is intensity."
+            },
+            {
+              "default": 1.0,
+              "id": 48,
+              "label": "Frequency",
+              "name": "vhs_sharpen_frequency",
+              "path": "vhs_settings.settings.sharpen.settings.frequency",
+              "type": "float",
+              "min": 0.5,
+              "max": 4.0,
+              "logarithmic": false,
+              "description": "Frequency / radius of the sharpening, relative to the tape speed's cutoff frequency."
+            }
+          ]
+        },
+        {
+          "default": true,
+          "id": 39,
+          "label": "Edge wave",
+          "name": "vhs_edge_wave_enabled",
+          "path": "vhs_settings.settings.edge_wave.enabled",
+          "type": "group",
+          "description": "Horizontal waving of the image.",
+          "children": [
+            {
+              "default": 0.5,
+              "id": 28,
+              "label": "Intensity",
+              "name": "vhs_edge_wave",
+              "path": "vhs_settings.settings.edge_wave.settings.intensity",
+              "type": "float",
+              "min": 0.0,
+              "max": 20.0,
+              "logarithmic": false,
+              "description": "Horizontal waving of the image, in pixels.",
+              "note": "JSON name is vhs_edge_wave; struct field is intensity. Stage skipped when intensity <= 0 (ntsc.rs:1342)."
+            },
+            {
+              "default": 4.0,
+              "id": 29,
+              "label": "Speed",
+              "name": "vhs_edge_wave_speed",
+              "path": "vhs_settings.settings.edge_wave.settings.speed",
+              "type": "float",
+              "min": 0.0,
+              "max": 10.0,
+              "logarithmic": false,
+              "description": "Speed at which the horizontal waving occurs."
+            },
+            {
+              "default": 0.05,
+              "id": 40,
+              "label": "Frequency",
+              "name": "vhs_edge_wave_frequency",
+              "path": "vhs_settings.settings.edge_wave.settings.frequency",
+              "type": "float",
+              "min": 0.0,
+              "max": 0.5,
+              "logarithmic": false,
+              "description": "Base wavelength for the horizontal waving."
+            },
+            {
+              "default": 2,
+              "id": 41,
+              "label": "Detail",
+              "name": "vhs_edge_wave_detail",
+              "path": "vhs_settings.settings.edge_wave.settings.detail",
+              "type": "int",
+              "min": 1,
+              "max": 5,
+              "description": "Octaves of noise for the waves."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "default": true,
+      "id": 25,
+      "label": "Vertically blend chroma",
+      "name": "vhs_chroma_vert_blend",
+      "path": "chroma_vert_blend",
+      "type": "boolean",
+      "description": "Vertically blend each scanline's chrominance with the scanline above it.",
+      "note": "JSON name is vhs_chroma_vert_blend (legacy); top-level bool, NOT inside vhs_settings group."
+    },
+    {
+      "default": 2,
+      "id": 10,
+      "label": "Chroma low-pass out",
+      "name": "chroma_lowpass_out",
+      "path": "chroma_lowpass_out",
+      "type": "enum",
+      "description": "Apply a low-pass filter to the output chroma signal.",
+      "options": [
+        {
+          "index": 2,
+          "label": "Full",
+          "description": "Full-intensity low-pass filter."
+        },
+        {
+          "index": 1,
+          "label": "Light",
+          "description": "Less intense low-pass filter."
+        },
+        {
+          "index": 0,
+          "label": "None",
+          "description": "No low-pass filter."
+        }
+      ],
+      "variantMap": {
+        "None": 0,
+        "Light": 1,
+        "Full": 2
+      }
+    },
+    {
+      "default": true,
+      "id": 61,
+      "label": "Scale",
+      "name": "scale_settings",
+      "path": "scale.enabled",
+      "type": "group",
+      "description": "Scale the effect by these factors.",
+      "note": "Disabled group => horizontal_scale=vertical_scale=1.0 and no scale_with_video_size multiply (ntsc.rs:1172-1186).",
+      "children": [
+        {
+          "default": 1.0,
+          "id": 32,
+          "label": "Horizontal scale",
+          "name": "bandwidth_scale",
+          "path": "scale.settings.horizontal_scale",
+          "type": "float",
+          "min": 0.125,
+          "max": 8.0,
+          "logarithmic": false,
+          "description": "Horizontally scale the effect by this amount. For 480p video, leave this at 1.0 for the most physically-accurate result.",
+          "note": "JSON name is bandwidth_scale; struct field is horizontal_scale."
+        },
+        {
+          "default": 1.0,
+          "id": 59,
+          "label": "Vertical scale",
+          "name": "vertical_scale",
+          "path": "scale.settings.vertical_scale",
+          "type": "float",
+          "min": 0.125,
+          "max": 8.8,
+          "logarithmic": false,
+          "description": "Vertically scale the effect by this amount. You should probably leave this at 1.0."
+        },
+        {
+          "default": false,
+          "id": 60,
+          "label": "Scale with video size",
+          "name": "scale_with_video_size",
+          "path": "scale.settings.scale_with_video_size",
+          "type": "boolean",
+          "description": "Multiply the scaling factors by the video's height. Prefer scaling the input video to 480p instead, which gives much more accurate-looking results."
+        }
+      ]
+    }
+  ]
+}

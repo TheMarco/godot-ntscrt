@@ -1,0 +1,277 @@
+{
+  "source_revision": "644e01b8d0285bdd5143c42491256ce0a4d315ff",
+  "sequences": {
+    "glitch_pop": {
+      "source": "presets/Glitch pop.json",
+      "sha256": "e026ca4aa8030722a8bdd788849ad1f31f85f38c461b94b48bc60900395b7a9b",
+      "original_duration": 2,
+      "keys": [
+        {
+          "t": 0,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.15575990853658528,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": false,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.09569905881332408,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.15575990853658528,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0.6133146367521367,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": false,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.1534497527758501,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.15575990853658528,
+            "vertical_scale": 0.23195427677160954,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.19812359038861901,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.6379971526125319,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.49618862768910477,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 1.2997817341569524,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.5391058726578765,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 2.0670275556988047,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 0.125,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.7073592557251909,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0.4029780982905983,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.7779184377168633,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.8356609993060374,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        },
+        {
+          "t": 0.8822432338653713,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 8.753348214285715,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.30211123511904764,
+            "vhs_edge_wave_speed": 10
+          }
+        },
+        {
+          "t": 1,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.3,
+            "composite_preemphasis": 0.12095083841463428,
+            "vertical_scale": 2.019073434161325,
+            "vhs_chroma_loss": 0,
+            "vhs_edge_wave": 0.5,
+            "vhs_edge_wave_enabled": true,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4
+          }
+        }
+      ]
+    },
+    "two_blips": {
+      "source": "presets/Two blips loop.json",
+      "sha256": "dbf2a28ae2057d7ed9c6fef4dceabbb2aa8af958287b96a0f1f22ba20ade47ec",
+      "original_duration": 2,
+      "keys": [
+        {
+          "t": 0,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.20631260016025638,
+            "vertical_scale": 0.3576825698896011,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.3042892041163142,
+          "easing": "Ease in",
+          "ntsc": {
+            "bandwidth_scale": 0.15165773785064646,
+            "vertical_scale": 1.058031606505832,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.4351338274169184,
+          "easing": "Ease in-out",
+          "ntsc": {
+            "bandwidth_scale": 0.7027602836647628,
+            "vertical_scale": 3,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.521330957326284,
+          "easing": "Ease out",
+          "ntsc": {
+            "bandwidth_scale": 0.25052893288836897,
+            "vertical_scale": 2.298095703125,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.575062547205438,
+          "easing": "Ease in",
+          "ntsc": {
+            "bandwidth_scale": 0.25052893288836897,
+            "vertical_scale": 0.3716863648504274,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.6680248064577039,
+          "easing": "Linear",
+          "ntsc": {
+            "bandwidth_scale": 0.25052893288836897,
+            "vertical_scale": 0.3716863648504274,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        },
+        {
+          "t": 0.7518646148036254,
+          "easing": "Ease in-out",
+          "ntsc": {
+            "bandwidth_scale": 0.25052893288836897,
+            "vertical_scale": 0.3716863648504274,
+            "vhs_chroma_loss": 0.08557089370351023,
+            "vhs_edge_wave": 20,
+            "vhs_edge_wave_frequency": 0.26728050595238095,
+            "vhs_edge_wave_speed": 10,
+            "vhs_edge_wave_detail": 5
+          }
+        },
+        {
+          "t": 0.883904125755287,
+          "easing": "Ease in",
+          "ntsc": {
+            "bandwidth_scale": 0.25052893288836897,
+            "vertical_scale": 0.3716863648504274,
+            "vhs_chroma_loss": 0.0019197382478632478,
+            "vhs_edge_wave": 2.290922619047619,
+            "vhs_edge_wave_frequency": 0.05,
+            "vhs_edge_wave_speed": 4,
+            "vhs_edge_wave_detail": 2
+          }
+        }
+      ]
+    }
+  }
+}
