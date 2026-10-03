@@ -4,6 +4,18 @@ render_mode blend_disabled;
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear;
 uniform float intensity : hint_range(0.0, 1.0) = 0.4;
 
+// Camera grading shares this pass; it does not allocate another render target.
+uniform float color_saturation = 1.0;
+uniform float color_temperature = 0.0;
+uniform float color_shadow_lift = 0.0;
+uniform bool linear_source = false;
+vec3 encode_srgb(vec3 c) {
+	return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0/2.4)) - 0.055, step(vec3(0.0031308), c));
+}
+vec3 decode_srgb(vec3 c) {
+	return mix(c / 12.92, pow((max(c, vec3(0.0)) + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
+}
+
 // Film grain is a fresh, stationary exposure each frame. There is no moving
 // UV offset or low-frequency noise sheet to look like a scrolling texture.
 uvec3 pcg3(uvec3 value) {
@@ -27,6 +39,14 @@ float gaussian(uvec2 pixel, uint frame) {
 
 void fragment() {
 	vec4 source = texture(screen_texture, SCREEN_UV);
+	if (color_saturation != 1.0 || color_temperature != 0.0 || color_shadow_lift > 0.0) {
+		vec3 rgb = linear_source ? encode_srgb(source.rgb) : source.rgb;
+		float luma = dot(rgb, vec3(0.2126,0.7152,0.0722));
+		rgb = mix(vec3(luma), rgb, color_saturation);
+		rgb *= vec3(1.0 + 0.08 * color_temperature, 1.0, 1.0 - 0.08 * color_temperature);
+		rgb += color_shadow_lift * pow(1.0 - clamp(luma,0.0,1.0), 2.0);
+		source.rgb = linear_source ? decode_srgb(max(rgb,vec3(0.0))) : max(rgb,vec3(0.0));
+	}
 	if (intensity <= 0.0) {
 		COLOR = source;
 	} else {
@@ -64,7 +84,7 @@ void fragment() {
 		float sigma = intensity * 0.018 * response;
 		float grain = (0.8 * correlated + 0.6 * fine) * sigma;
 		vec3 dye_grain = vec3(chroma_a, -0.5 * chroma_a - 0.3 * chroma_b,
-			chroma_b) * (sigma * 0.10);
+			chroma_b) * (sigma * 0.10 * color_saturation);
 		COLOR = vec4(clamp(source.rgb + vec3(grain) + dye_grain,
 			vec3(0.0), vec3(1.0)), source.a);
 	}

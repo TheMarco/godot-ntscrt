@@ -34,6 +34,14 @@ var _signature := ""
 var _retired: Array[Dictionary] = []
 var _running := false
 var _clock := 0.0
+var _ambient_rate := 0.0
+var _ambient_strength := 0.0
+var _ambient_kind := 2
+var _ambient_elapsed := 0.0
+var _ambient_next := 1.6
+var _ambient_started := -100.0
+var _ambient_event := 0
+var _ambient_duration := 0.25
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -73,7 +81,46 @@ void fragment() {
 	RenderingServer.frame_post_draw.connect(_queue_frame)
 
 func _process(delta: float) -> void:
-	if is_visible_in_tree(): _clock += minf(delta,0.1)
+	if not is_visible_in_tree(): return
+	var step := minf(delta,0.1)
+	_clock += step
+	if _ambient_rate<=0.0 or not signal_enabled: return
+	_ambient_elapsed += step
+	if _ambient_elapsed>=_ambient_next:
+		preview_ambient_fault()
+
+func configure_ambient_faults(rate: float,strength: float,kind: int,suppressed: bool) -> void:
+	rate = 0.0 if suppressed else clampf(rate,0.0,20.0)
+	strength = clampf(strength,0.0,1.0)
+	kind = clampi(kind,0,4)
+	if is_equal_approx(rate,_ambient_rate) and is_equal_approx(strength,_ambient_strength) and kind==_ambient_kind: return
+	_ambient_rate = rate
+	_ambient_strength = strength
+	_ambient_kind = kind
+	_ambient_elapsed = 0.0
+	_ambient_started = -100.0
+	_ambient_next = 1.6
+	_ambient_event = 0
+
+func preview_ambient_fault() -> void:
+	if _ambient_rate<=0.0 or _ambient_strength<=0.0 or not signal_enabled: return
+	_ambient_started = _ambient_elapsed
+	_ambient_duration = 0.16+0.22*_ambient_strength
+	_ambient_event += 1
+	# Slightly irregular spacing; no random global state or allocations per tick.
+	var intervals := [1.0,0.73,1.18,0.88,1.35]
+	_ambient_next = _ambient_elapsed+60.0/_ambient_rate*float(intervals[(_ambient_event-1)%intervals.size()])
+
+func effective_game_state() -> Dictionary:
+	var state := game_state.duplicate()
+	# Enemy encounters and explicit workshop cues own the picture while active.
+	if not signal_enabled or _ambient_rate<=0.0 or float(state.get("fault_amount",0.0))>0.0: return state
+	var phase := (_ambient_elapsed-_ambient_started)/_ambient_duration
+	if phase<=0.0 or phase>=1.0: return state
+	state.merge({"fault_kind":float(_ambient_kind),"fault_amount":_ambient_strength*smoothstep(0.0,0.15,phase)*(1.0-smoothstep(0.55,1.0,phase)),
+		"fault_phase":phase,"fault_origin":0.15+fmod(float(_ambient_event)*0.37,0.7),
+		"field_index":floor(_clock*60000.0/1001.0)},true)
+	return state
 
 func render_target_size(display: Vector2i, signal_size: Vector2i) -> Vector2i:
 	var target := display
@@ -102,7 +149,7 @@ func _queue_frame() -> void:
 	(material as ShaderMaterial).set_shader_parameter("display_fraction",Vector2(shown)/Vector2(display))
 	RenderingServer.call_on_render_thread(_render_frame.bind(source.get_texture().get_rid(),source.size,source.use_hdr_2d,
 		target,signal_size,preset_name,parameters.duplicate(),signal_enabled,receiver_enabled,
-		signal_settings.duplicate(),receiver_settings.duplicate(),int(_clock*60000.0/1001.0),game_state.duplicate(),source_resolution,downscale_method))
+		signal_settings.duplicate(),receiver_settings.duplicate(),int(_clock*60000.0/1001.0),effective_game_state(),source_resolution,downscale_method))
 
 func _render_frame(source_texture: RID, extent: Vector2i, linear: bool, display: Vector2i, signal_size: Vector2i, selected: String, knobs: Dictionary,
 		use_signal: bool, use_receiver: bool, signal_knobs: Dictionary, receiver_knobs: Dictionary, field: int, state: Dictionary, source_first: bool, filter_method: int) -> void:

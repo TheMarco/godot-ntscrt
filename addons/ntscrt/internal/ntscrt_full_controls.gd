@@ -58,7 +58,7 @@ func _section(parent: VBoxContainer, title: String, expanded: bool) -> VBoxConta
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.toggle_mode = true
 	button.set_pressed_no_signal(expanded)
-	button.add_theme_font_size_override("font_size", 22)
+	button.add_theme_font_size_override("font_size", 17)
 	button.tooltip_text = "Expand or collapse " + title
 	parent.add_child(button)
 	var body := VBoxContainer.new()
@@ -73,17 +73,17 @@ func _add_descriptor(parent: VBoxContainer, engine: String, descriptor: Dictiona
 	var key: String = descriptor["name"]
 	var path := engine + "/" + key
 	var kind: String = descriptor["type"]
-	var row := HBoxContainer.new()
+	var row := VBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	parent.add_child(row)
 	var label := Label.new()
 	label.text = descriptor["label"]
 	if not str(descriptor.get("unit", "")).is_empty():
 		label.text += " (" + str(descriptor["unit"]) + ")"
-	label.add_theme_font_size_override("font_size", 22)
+	label.add_theme_font_size_override("font_size", 17)
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.custom_minimum_size.x = 220
+	label.custom_minimum_size.x = 0
 	row.add_child(label)
 	var control: Control
 	if kind in ["boolean", "group"]:
@@ -96,7 +96,7 @@ func _add_descriptor(parent: VBoxContainer, engine: String, descriptor: Dictiona
 			select.add_item(str(option["label"]), int(option["index"]))
 			select.set_item_tooltip(select.item_count - 1, str(option.get("description", "")))
 		select.item_selected.connect(func(index: int) -> void: _changed(engine, key, select.get_item_id(index)))
-		select.get_popup().add_theme_font_size_override("font_size", 22)
+		select.get_popup().add_theme_font_size_override("font_size", 17)
 		control = select
 	else:
 		var number := SpinBox.new()
@@ -104,10 +104,10 @@ func _add_descriptor(parent: VBoxContainer, engine: String, descriptor: Dictiona
 		number.max_value = float(descriptor.get("max", 1.0))
 		number.step = 1.0 if kind == "int" else 0.000001
 		number.value_changed.connect(func(value: float) -> void: _changed(engine, key, int(value) if kind == "int" else value))
-		number.get_line_edit().add_theme_font_size_override("font_size", 22)
+		number.get_line_edit().add_theme_font_size_override("font_size", 17)
 		control = number
-	control.add_theme_font_size_override("font_size", 22)
-	control.custom_minimum_size.x = 200
+	control.add_theme_font_size_override("font_size", 17)
+	control.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	control.tooltip_text = str(descriptor.get("description", ""))
 	label.tooltip_text = control.tooltip_text
 	row.add_child(control)

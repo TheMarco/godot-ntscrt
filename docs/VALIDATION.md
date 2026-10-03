@@ -3,6 +3,23 @@
 Verified on 2026-10-03 with Godot 4.7.2, Forward+/Metal, on an Apple M3 Max.
 Commands are in [tests/README.md](../tests/README.md).
 
+Preset workshop update, also verified on 2026-10-03:
+
+- Complete JSON roundtrips cover every exported profile field, all 62 NTSC and
+  17 receiver settings, and every parameter across all seven CRTs. Disabled
+  settings survive reduced-flashing gates; malformed input is rejected.
+- Native A/B, CRT and signal editing, reset, capture of JSON/.tres/PNG, loading,
+  and UI refresh passed in both the standalone demo and the actual game.
+- Real captured JSON files loaded in both directions. The standalone editor
+  preserved game-specific rendering context on re-export.
+- The updated exported demo pack passed the native capture/load smoke check
+  from outside its source checkout. Preview and control-panel images were
+  inspected. The game's settings and graphics-quality regressions also passed.
+
+The following rendering checks were established during extraction; unchanged
+shader algorithms do not require repeating all seven compilation checks for
+the preset editor update.
+
 - Standalone demo: tape/CRT independence, receiver, authored and procedural
   faults, pause, viewport resizing and renderer cleanup passed.
 - All seven original CRT chains compiled and produced nonblank GPU output

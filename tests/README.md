@@ -3,14 +3,14 @@
 Use the Godot executable available on your machine. Import the project in the editor once before running tests, so compute shaders and global classes have their normal import metadata. GPU tests require native Forward+ or Mobile; do not add `--headless` to them.
 
 ```sh
-# Resource settings, independent tape/CRT, sanitization and persistence.
+# Every profile field, all model parameters, JSON/resource roundtrips and sanitation.
 godot --headless --path . --script tests/audit_profile.gd
 
 # Canonical control descriptors, UI signals and disabled groups.
 godot --headless --path . --script tests/audit_ntscrt_full_controls.gd
 
-# Standalone source viewport, native demo, stage toggles, receiver, glitches,
-# pause, resize and cleanup. Saves user://test-captures/demo.png (or use -- --capture-dir=/path).
+# Native demo, all model controls, A/B, captured JSON/.tres/PNG, loading, stage
+# toggles, pause, resize and cleanup. Saves user://test-captures/ (or -- --capture-dir=/path).
 godot --path . --audio-driver Dummy --script tests/smoke.gd --quit-after 1500
 
 # All original CRT chains compile and produce a nonblank GPU image.

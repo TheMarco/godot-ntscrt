@@ -12,7 +12,7 @@ func _draw() -> void:
 	var extent := get_viewport_rect().size
 	draw_rect(Rect2(Vector2.ZERO,extent),Color(0.025,0.034,0.045))
 	if use_tv_card:
-		var available := Vector2(maxf(1.0,extent.x-388.0),maxf(1.0,extent.y-122.0))
+		var available := Vector2(maxf(1.0,extent.x-48.0),maxf(1.0,extent.y-122.0))
 		var factor := minf(available.x/TV_CARD.get_width(),available.y/TV_CARD.get_height())
 		var card_size := TV_CARD.get_size()*factor
 		draw_texture_rect(TV_CARD,Rect2(Vector2(24,98)+(available-card_size)*0.5,card_size),false)

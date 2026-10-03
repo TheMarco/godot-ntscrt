@@ -20,7 +20,7 @@ godot --path .
 
 Tested with Godot **4.7.2**, Forward+/Metal, on an Apple M3 Max. Vulkan, Windows, Linux, mobile devices and low-end GPUs have not been verified. Compatibility/OpenGL and Web do not support this compute pipeline; the wrapper displays the source unchanged and reports that limitation.
 
-The demo has four tape choices, independent CRT, quality, reduced flashing, and two glitch buttons. Advanced controls expose the original NTSC/receiver settings and CRT model selection. The demo includes the supplied TV test card and an original animated chart. No Liminal assets, media downloads, Rust runtime, Swift application, or external service is required. The supplied image has its own provenance note in `demo/assets/README.md`; it is not required by the addon.
+The demo opens with **20 curated looks**: MiniDV-style AV captures, Hi8/Video8, VHS camcorders, found footage, surveillance feeds and seven CRT playback looks. Browse with the arrows, compare A/B and capture complete presets as JSON, Godot resources and PNG previews. **Fine-tune this look** reveals the detailed controls when you want them. See [the preset guide](docs/PRESETS.md). The demo includes three moving-video clips, the supplied TV test card and an original animated chart. No Liminal assets, media downloads, Rust runtime, Swift application, or external service is required. The supplied media have their own provenance notes in `demo/assets/README.md`; they are not required by the addon.
 
 ## Add it to a project
 
@@ -74,7 +74,7 @@ video.clear_glitch()
 
 Five procedural faults are included: tracking, colour unlock, dropout, RF static and sync slip. The two authored cues retain selected upstream timeline tracks and readability limits. The diagonal scrolling-static defect from the initial port is fixed: fields receive independent noise.
 
-The addon does **not** spawn enemies, schedule random faults, alter gameplay timing or decide when danger occurs. Call a cue before your own encounter, damage or transition event. Cues pause with the effect, return to the selected tape settings afterward, and are suppressed by Tape Off, zero tape damage, or Reduced flashing. CRT can remain enabled throughout.
+Optional preset defects run at the profile’s selected rate; manual/gameplay cues take priority. Reduced flashing suppresses both. The addon does **not** spawn enemies, alter gameplay timing or decide when danger occurs. Call a cue before your own encounter, damage or transition event. Cues pause with the effect, return to the selected tape settings afterward, and are suppressed by Tape Off, zero tape damage, or Reduced flashing. CRT can remain enabled throughout.
 
 Optional local interference: `video.set_entity_interference(normalized_position, radius, amount)`. Reset its amount to zero when the event ends.
 
@@ -115,4 +115,14 @@ Use `is_supported()`, `get_error()` and the `renderer_error(message)` signal to 
 
 See [tests/README.md](tests/README.md) for focused checks, including native shader compilation, the diagonal-noise regression, standalone routing, and exported-pack assets. The [validation record](docs/VALIDATION.md) lists the tested configuration and results. See [docs/PORTING.md](docs/PORTING.md) for the source revisions and extraction boundaries.
 
-Only the addon directory is needed at runtime. `demo/`, `tests/` and `tools/` are examples, verification and optional upstream-regeneration tools.
+Only the addon directory is needed at runtime. The optional `workshop.gd` editor uses host callbacks so games can tune their own live scenes with the same controls. `demo/`, `tests/` and `tools/` are examples, verification and optional upstream-regeneration tools.
+
+
+### Footage demo
+
+The demo includes an abandoned-mall walkthrough (30 seconds, 720p60, with sound),
+two original moving-video loops, the TV card and motion chart. Use the same 20 complete looks as the game, pause the source for
+A/B comparison, replay it or open your own `.ogv` file. The controls for tape,
+CRT and color are optional fine-tuning; there is no competing four-preset menu.
+See [moving-footage examples and API usage](docs/PRESETS.md#compare-looks-on-moving-footage)
+and [sample provenance and rebuilding](demo/assets/README.md#original-moving-samples).

@@ -90,12 +90,18 @@ func _apply_configuration() -> void:
 	_configuration_pending = false
 	if source==null or profile==null: return
 	_resize_world()
-	_grain.visible = _supported and profile.tape!=PROFILE.Tape.OFF and profile.film_grain>0.0
+	_grain.visible = _supported and (profile.film_grain>0.0 or profile.color_saturation!=1.0 or profile.color_temperature!=0.0 or profile.color_shadow_lift>0.0)
 	(_grain.material as ShaderMaterial).set_shader_parameter("intensity",profile.film_grain)
+	(_grain.material as ShaderMaterial).set_shader_parameter("color_saturation",profile.color_saturation)
+	(_grain.material as ShaderMaterial).set_shader_parameter("color_temperature",profile.color_temperature)
+	(_grain.material as ShaderMaterial).set_shader_parameter("color_shadow_lift",profile.color_shadow_lift)
+	(_grain.material as ShaderMaterial).set_shader_parameter("linear_source",source.use_hdr_2d)
 	if presenter==null: return
 	presenter.visible = profile.tape!=PROFILE.Tape.OFF or profile.crt_enabled or profile.receiver_enabled
 	presenter.signal_enabled = profile.tape!=PROFILE.Tape.OFF
 	presenter.receiver_enabled = profile.receiver_enabled
+	presenter.configure_ambient_faults(profile.ambient_fault_rate,profile.ambient_fault_strength*profile.tape_damage*2.0,
+		profile.ambient_fault_kind,profile.reduced_flashing or not presenter.signal_enabled)
 	presenter.preset_name = profile.active_crt()
 	presenter.parameters = profile.active_crt_parameters()
 	presenter.signal_extent = PROFILE.SIGNAL_SIZES[profile.quality]
