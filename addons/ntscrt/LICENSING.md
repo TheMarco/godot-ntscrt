@@ -2,11 +2,11 @@
 
 This repository combines original Godot integration work with translated and vendored upstream work. **The whole bundle is not MIT-licensed.** The root MIT grant is limited to the original integration, demo, documentation and test harness code. It does not grant rights to upstream material.
 
-## Material requiring clarification before public redistribution
+## Material with unresolved redistribution terms
 
 The checked-out [NTSCRT](https://github.com/finnmckenty/NTSCRT) revision `644e01b8d0285bdd5143c42491256ce0a4d315ff` contains no top-level LICENSE, COPYING or NOTICE file. Its original authors retain copyright. A publicly readable repository is not recorded here as a redistribution grant.
 
-The extraction retains locally ported NTSCRT receiver/downscale/sizing code and selected preset animation data so the standalone local port is complete. Do not treat their presence here as license clearance. Resolve the upstream terms for these components before publishing this complete bundle:
+The extraction retains locally ported NTSCRT receiver/downscale/sizing code and selected preset animation data so the standalone local port is complete. Do not treat their presence here as license clearance. Resolve the upstream terms for these components before relying on permission to reuse or redistribute them:
 
 - `addons/ntscrt/internal/ntscrt_receiver_gpu.gd` and `shaders/ntscrt_receiver_gpu/`.
 - `addons/ntscrt/internal/ntscrt_downscale_gpu.gd` and `shaders/ntscrt_downscale_gpu/`.
@@ -14,7 +14,7 @@ The extraction retains locally ported NTSCRT receiver/downscale/sizing code and 
 - Receiver metadata in `addons/ntscrt/third_party/receiver_schema.json`.
 - The selected NTSCRT timeline data in `addons/ntscrt/third_party/glitch_sequences.json` and associated upstream-derived sampling behavior.
 
-This is a record of the pinned local source, not a claim about permission that may have been granted elsewhere. No repository was published by this extraction.
+This is a record of the pinned local source, not a claim about permission that may have been granted elsewhere. Publishing this port does not establish a redistribution grant from upstream authors.
 
 ## ntsc-rs
 

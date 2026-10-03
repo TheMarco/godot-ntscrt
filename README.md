@@ -5,13 +5,16 @@ Extracted from the working Liminal port of [NTSCRT](https://github.com/finnmcken
 
 Tape and CRT are independent: use a damaged recording, a clean image on a CRT, both together, or neither. Put the game and recorded HUD inside the effect; put crisp menus outside it.
 
-**Licensing status:** this is a local extraction, not a license-cleared public release. The pinned NTSCRT checkout has no repository-wide license. Its receiver, downscaler, sizing and preset-derived material need license clarification before redistribution. CRT shaders retain their own licenses, including GPL. See [LICENSING.md](LICENSING.md); the integration's MIT license does not override upstream rights.
+**Licensing status:** this port is not a license-cleared release. Public availability does not resolve upstream licensing. The pinned NTSCRT checkout has no repository-wide license. Its receiver, downscaler, sizing and preset-derived material need license clarification before redistribution. CRT shaders retain their own licenses, including GPL. See [LICENSING.md](LICENSING.md); the integration's MIT license does not override upstream rights.
 
 ## Try the demo
 
 Open `project.godot` with **Godot 4.7+**, select **Forward+** or **Mobile**, and press F6 on `demo/demo.tscn` (or F5 for the project).
 
+For a fresh checkout, let Godot import the scripts and shaders first:
+
 ```sh
+godot --editor --path . --import
 godot --path .
 ```
 
