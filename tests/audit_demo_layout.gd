@@ -48,7 +48,7 @@ func _run() -> void:
 	studio._crt_filter.text = "GLOW_HALATION"
 	studio._filter_crt()
 	check(studio._crt_controls["GLOW_HALATION"].get_parent().get_parent().visible,"CRT search hides matching row")
-	studio._save_dialog.popup_centered(Vector2i(480,260))
+	studio._save_dialog.popup_centered(Vector2i(480,320))
 	await frames(4)
 	check(studio._name.is_visible_in_tree() and studio._capture_button.is_visible_in_tree(),"Save controls are inaccessible")
 	check(Rect2(Vector2.ZERO,Vector2(studio._save_dialog.size)).encloses(studio._capture_button.get_global_rect()),"Save button leaves dialog")

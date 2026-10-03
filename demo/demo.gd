@@ -33,6 +33,14 @@ var _external_path := ""
 var _video_extent := Vector2i.ZERO
 
 func _ready() -> void:
+	var window := get_window()
+	# Scale canvas items at the output resolution, keeping text crisp on Retina/4K.
+	# Small windows retain the responsive layout at 1x instead of shrinking text.
+	window.content_scale_size = Vector2i.ZERO
+	window.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	window.gui_embed_subwindows = true
+	window.size_changed.connect(_update_ui_scale)
+	_update_ui_scale()
 	var initial := LIBRARY.make_profile(8)
 	effect = EFFECT.new()
 	effect.profile = initial
@@ -73,6 +81,12 @@ func _ready() -> void:
 		workshop.preview_damage = effect.presenter.preview_ambient_fault
 	workshop._refresh_library_description()
 	_select_source(0)
+
+func _update_ui_scale() -> void:
+	var window := get_window()
+	var factor := maxf(1.0,minf(window.size.x/1440.0,window.size.y/900.0))
+	if not is_equal_approx(window.content_scale_factor,factor):
+		window.content_scale_factor = factor
 
 func _build_source_controls(rows: VBoxContainer) -> HBoxContainer:
 	var source_row := HBoxContainer.new()

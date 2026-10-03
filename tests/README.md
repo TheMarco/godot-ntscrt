@@ -17,6 +17,10 @@ godot --path . --audio-driver Dummy --script tests/smoke.gd --quit-after 1500
 # A/B protection, CRT search, save dialog and cropped capture.
 godot --path . --audio-driver Dummy --script tests/audit_demo_layout.gd
 
+# Actual fullscreen scaling, click positions, dialogs/dropdowns, capture pixels
+# and returning to windowed mode. Temporarily enters fullscreen on the test display.
+godot --path . --audio-driver Dummy --script tests/audit_demo_scaling.gd
+
 # All original CRT chains compile and produce a nonblank GPU image.
 godot --path . --script tests/audit_ntscrt_slang.gd --quit-after 1500 -- --preset=all
 

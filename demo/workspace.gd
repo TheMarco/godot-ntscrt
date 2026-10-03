@@ -46,7 +46,7 @@ func _build_ui() -> void:
 	_focus_preview = _button(toolbar,"Expand preview",_toggle_inspector)
 	_focus_preview.size_flags_horizontal = 0
 	_button(toolbar,"Load…",_choose_preset).size_flags_horizontal = 0
-	_button(toolbar,"Save preset…",func(): _save_dialog.popup_centered(Vector2i(480,260))).size_flags_horizontal = 0
+	_button(toolbar,"Save preset…",func(): _save_dialog.popup_centered(Vector2i(480,320))).size_flags_horizontal = 0
 	_split = HSplitContainer.new()
 	_split.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_split.add_theme_constant_override("separation",16)
@@ -221,6 +221,7 @@ func _build_save_dialog() -> void:
 	_save_dialog.transient = true
 	_save_dialog.exclusive = true
 	_save_dialog.unresizable = true
+	_save_dialog.min_size = Vector2i(480,320)
 	_save_dialog.visible = false
 	_save_dialog.close_requested.connect(_save_dialog.hide)
 	add_child(_save_dialog)

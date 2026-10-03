@@ -3,7 +3,9 @@
 The standalone demo uses a resizable studio layout. Drag the divider to give the
 preview or controls more space; **Expand preview** hides the controls until you
 choose **Show controls**. Playback and A/B remain beside the picture. Menus stay
-crisp, and captures include only the preview.
+crisp, and captures include only the preview. On larger windows and fullscreen
+displays, text, buttons, spacing and dialogs scale together automatically. Small
+windows keep their responsive 1× layout instead of shrinking the text.
 
 1. Browse the 20 complete looks on **Looks**, or use the arrows and dropdown at
    the top of the controls. The current look's description stays below the video.
