@@ -13,6 +13,10 @@ godot --headless --path . --script tests/audit_ntscrt_full_controls.gd
 # toggles, pause, resize and cleanup. Saves user://test-captures/ (or -- --capture-dir=/path).
 godot --path . --audio-driver Dummy --script tests/smoke.gd --quit-after 1500
 
+# Demo layout at 960×640, 1280×800 and 1440×900: pages, divider, expand preview,
+# A/B protection, CRT search, save dialog and cropped capture.
+godot --path . --audio-driver Dummy --script tests/audit_demo_layout.gd
+
 # All original CRT chains compile and produce a nonblank GPU image.
 godot --path . --script tests/audit_ntscrt_slang.gd --quit-after 1500 -- --preset=all
 

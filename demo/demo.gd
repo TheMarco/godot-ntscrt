@@ -2,7 +2,7 @@ extends Control
 const EFFECT = preload("res://addons/ntscrt/effect.gd")
 const PROFILE = preload("res://addons/ntscrt/profile.gd")
 const LIBRARY = preload("res://addons/ntscrt/preset_library.gd")
-const WORKSHOP = preload("res://addons/ntscrt/workshop.gd")
+const WORKSHOP = preload("res://demo/workspace.gd")
 const CARD = preload("res://demo/test_card.gd")
 const CLIPS = {
 	"hallway": preload("res://demo/assets/hallway.ogv"),
@@ -33,11 +33,26 @@ var _external_path := ""
 var _video_extent := Vector2i.ZERO
 
 func _ready() -> void:
-	effect = EFFECT.new()
 	var initial := LIBRARY.make_profile(8)
+	effect = EFFECT.new()
 	effect.profile = initial
-	add_child(effect)
-	effect.offset_right = -WORKSHOP.PANEL_WIDTH
+	var ui := CanvasLayer.new()
+	ui.layer = 10
+	add_child(ui)
+	workshop = WORKSHOP.new()
+	workshop.profile = initial
+	workshop.apply_profile = func(value: NtscrtProfile):
+		effect.clear_glitch()
+		effect.profile = value
+	workshop.build_source_controls = _build_source_controls
+	workshop.capture_image = _capture_image
+	workshop.capture_context = _capture_context
+	workshop.restore_context = _restore_context
+	workshop.renderer_error = effect.get_error
+	workshop.play_glitch = effect.trigger_glitch
+	ui.add_child(workshop)
+	# Mount once in its final parent: removing a live effect disposes its GPU renderer.
+	workshop._preview_slot.add_child(effect)
 	var recorded := Node2D.new()
 	recorded.name = "RecordedScene"
 	var backing := ColorRect.new()
@@ -54,34 +69,24 @@ func _ready() -> void:
 	recorded.add_child(_card)
 	effect.add_content(recorded)
 	effect.source.size_changed.connect(_fit_video)
-	var ui := CanvasLayer.new()
-	ui.layer = 10
-	add_child(ui)
-	workshop = WORKSHOP.new()
-	workshop.profile = initial
-	workshop.apply_profile = func(value: NtscrtProfile):
-		effect.clear_glitch()
-		effect.profile = value
-	workshop.build_source_controls = _build_source_controls
-	workshop.capture_image = _capture_image
-	workshop.capture_context = _capture_context
-	workshop.restore_context = _restore_context
-	workshop.renderer_error = effect.get_error
-	workshop.play_glitch = effect.trigger_glitch
 	if effect.presenter!=null:
 		workshop.preview_damage = effect.presenter.preview_ambient_fault
-	ui.add_child(workshop)
+	workshop._refresh_library_description()
 	_select_source(0)
 
-func _build_source_controls(rows: VBoxContainer) -> void:
+func _build_source_controls(rows: VBoxContainer) -> HBoxContainer:
+	var source_row := HBoxContainer.new()
+	source_row.add_theme_constant_override("separation",12)
+	rows.add_child(source_row)
 	var title := Label.new()
-	title.text = "Preview footage"
-	rows.add_child(title)
+	title.text = "Footage"
+	source_row.add_child(title)
 	_source_select = OptionButton.new()
 	_source_select.fit_to_longest_item = false
 	for source_name in SOURCE_NAMES: _source_select.add_item(source_name)
 	_source_select.item_selected.connect(_select_source)
-	rows.add_child(_source_select)
+	_source_select.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	source_row.add_child(_source_select)
 	var playback := HBoxContainer.new()
 	rows.add_child(playback)
 	for title_text in ["Pause footage","Replay","Open .ogv…"]:
@@ -97,10 +102,8 @@ func _build_source_controls(rows: VBoxContainer) -> void:
 			_: button.pressed.connect(func(): _open_dialog.popup_centered_ratio(0.8))
 	_source_note = Label.new()
 	_source_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_source_note.add_theme_font_size_override("font_size",13)
+	_source_note.hide()
 	rows.add_child(_source_note)
-	var divider := HSeparator.new()
-	rows.add_child(divider)
 	_open_dialog = FileDialog.new()
 	_open_dialog.title = "Preview your footage"
 	_open_dialog.access = FileDialog.ACCESS_FILESYSTEM
@@ -108,6 +111,7 @@ func _build_source_controls(rows: VBoxContainer) -> void:
 	_open_dialog.add_filter("*.ogv","Ogg Theora video")
 	_open_dialog.file_selected.connect(_open_video)
 	add_child(_open_dialog)
+	return playback
 
 func _select_source(index: int) -> void:
 	_source_index = index
@@ -130,6 +134,7 @@ func _select_source(index: int) -> void:
 		_card.use_tv_card = source_id=="tv_test_card"
 		_card.queue_redraw()
 	_source_note.text = SOURCE_NOTES[index] if index<SOURCE_NOTES.size() else "Your local footage. Changing looks keeps this source."
+	_source_select.tooltip_text = _source_note.text
 	_play_button.disabled = source_id=="tv_test_card"
 	_video_extent = Vector2i.ZERO
 	_fit_video()

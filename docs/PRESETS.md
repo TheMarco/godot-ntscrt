@@ -1,18 +1,28 @@
 # Authoring and capturing presets
 
-1. Choose a CRT on **Look**, using the arrows to cycle the seven models. Set
-   Tape Off to judge the CRT by itself. A fixed model stays selected across
-   graphics budgets; Automatic follows the budget.
-2. Use **CRT tuning** for the selected model's original parameters. Search by
-   label or parameter name. Each model keeps its own values. Reset restores
-   this port's calibration plus the upstream defaults.
-3. Use **Signal** for all 62 NTSC and 17 receiver settings, and **Output** for
-   resolution, resizing, supersampling and previous-field history.
-4. **Keep as A** stores a reference. Continue editing B, then use **Show A** /
+The standalone demo uses a resizable studio layout. Drag the divider to give the
+preview or controls more space; **Expand preview** hides the controls until you
+choose **Show controls**. Playback and A/B remain beside the picture. Menus stay
+crisp, and captures include only the preview.
+
+1. Browse the 20 complete looks on **Looks**, or use the arrows and dropdown at
+   the top of the controls. The current look's description stays below the video.
+2. Use **Adjust** for tape damage, grain, camera color and occasional defects.
+   Switching **Recording effects** off bypasses tape processing without resetting
+   its settings. **Test glitch**, beside playback, previews the look's defect.
+3. Use **CRT** to enable the screen effect, choose a model and tune its original
+   parameters. Search by label or parameter name; every model keeps its own values.
+4. **Signal** exposes the detailed NTSC and receiver controls. **Output** holds
+   graphics budget, reduced flashing, resolution and other processing options.
+   Each page has one full-height scrolling area.
+5. **Keep as A** stores a reference. Continue editing B, then use **Show A** /
    **Back to B** to compare. A is read-only while shown. Capturing A saves A.
-5. Give the look a name and press **Capture preset**. **Open captures** opens
-   the output folder. **Load preset…** restores a captured JSON file, and
-   **Copy JSON** copies the visible look's configuration.
+6. **Save preset…** opens the naming dialog. **Capture preset** saves the files;
+   **Open captures** opens their folder, and **Copy JSON** copies the visible look.
+   Use **Load…** in the main toolbar to restore a captured JSON file.
+
+The embeddable workshop keeps its compact overlay layout and **Fine-tune this
+look** switch. Both layouts use the same profile editing and capture code.
 
 Every capture creates a new folder under the application's `user://presets/`:
 
